@@ -2,7 +2,9 @@
 
 [![Github Actions Status](/workflows/Build/badge.svg)](/actions/workflows/build.yml)
 
-A JupyterLab extension.
+Customized Jupyterlab Contextual Help Panel That Allows Manually Update When Press F1.
+
+Auto update can still be enabled in the context menu.
 
 ## Requirements
 

@@ -1,18 +1,21 @@
 {
     "name": "jupyterlab_pausable_contextual_help",
-    "version": "0.1.0",
-    "description": "A JupyterLab extension.",
+    "version": "0.1.3",
+    "description": "Customized Jupyterlab Contextual Help Panel That Allows Manually Update When Press F1.",
     "keywords": [
         "jupyter",
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "",
+    "homepage": "https://github.com/zhangfeiran/jupyterlab_pausable_contextual_help",
     "bugs": {
-        "url": "/issues"
+        "url": "https://github.com/zhangfeiran/jupyterlab_pausable_contextual_help/issues"
     },
     "license": "BSD-3-Clause",
-    "author": "Frz",
+    "author": {
+        "name": "Feiran Zhang",
+        "email": "feiranzhang@outlook.com"
+    },
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
         "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
@@ -24,7 +27,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": ".git"
+        "url": "https://github.com/zhangfeiran/jupyterlab_pausable_contextual_help.git"
     },
     "scripts": {
         "build": "jlpm build:lib && jlpm build:labextension:dev",
