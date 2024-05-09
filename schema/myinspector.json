@@ -1,6 +1,6 @@
 {
-  "title": "Inspector",
-  "description": "Inspector settings.",
+  "title": "MyInspector",
+  "description": "MyInspector settings.",
   "jupyter.lab.menus": {
     "main": [
       {

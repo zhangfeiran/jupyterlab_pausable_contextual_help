@@ -8,34 +8,34 @@ import {
   TranslationBundle
 } from '@jupyterlab/translation';
 import { Panel, PanelLayout, Widget } from '@lumino/widgets';
-import { IInspector } from './tokens';
+import { IMyInspector } from './tokens';
 
 /**
- * The class name added to inspector panels.
+ * The class name added to myinspector panels.
  */
-const PANEL_CLASS = 'jp-Inspector';
+const PANEL_CLASS = 'jp-MyInspector';
 
 /**
- * The class name added to inspector content.
+ * The class name added to myinspector content.
  */
-const CONTENT_CLASS = 'jp-Inspector-content';
+const CONTENT_CLASS = 'jp-MyInspector-content';
 
 /**
- * The class name added to default inspector content.
+ * The class name added to default myinspector content.
  */
-const DEFAULT_CONTENT_CLASS = 'jp-Inspector-default-content';
+const DEFAULT_CONTENT_CLASS = 'jp-MyInspector-default-content';
 
 /**
- * A panel which contains a set of inspectors.
+ * A panel which contains a set of myinspectors.
  */
-export class InspectorPanel
+export class MyInspectorPanel
   extends Panel
-  implements IInspector, Printing.IPrintable
+  implements IMyInspector, Printing.IPrintable
 {
   /**
-   * Construct an inspector.
+   * Construct an myinspector.
    */
-  constructor(options: InspectorPanel.IOptions = {}) {
+  constructor(options: MyInspectorPanel.IOptions = {}) {
     super();
     this.translator = options.translator || nullTranslator;
     this._trans = this.translator.load('jupyterlab');
@@ -43,11 +43,11 @@ export class InspectorPanel
     if (options.initialContent instanceof Widget) {
       this._content = options.initialContent;
     } else if (typeof options.initialContent === 'string') {
-      this._content = InspectorPanel._generateContentWidget(
+      this._content = MyInspectorPanel._generateContentWidget(
         `<p>${options.initialContent}</p>`
       );
     } else {
-      this._content = InspectorPanel._generateContentWidget(
+      this._content = MyInspectorPanel._generateContentWidget(
         '<p>' +
                 this._trans.__('Press F1 on a function to see documentation.') +
           '</p>'
@@ -66,12 +66,12 @@ export class InspectorPanel
   }
 
   /**
-   * The source of events the inspector panel listens for.
+   * The source of events the myinspector panel listens for.
    */
-  get source(): IInspector.IInspectable | null {
+  get source(): IMyInspector.IInspectable | null {
     return this._source;
   }
-  set source(source: IInspector.IInspectable | null) {
+  set source(source: IMyInspector.IInspectable | null) {
     if (this._source === source) {
       return;
     }
@@ -79,7 +79,7 @@ export class InspectorPanel
     // Disconnect old signal handler.
     if (this._source) {
       this._source.standby = true;
-      this._source.inspected.disconnect(this.onInspectorUpdate, this);
+      this._source.inspected.disconnect(this.onMyInspectorUpdate, this);
       this._source.disposed.disconnect(this.onSourceDisposed, this);
     }
 
@@ -94,7 +94,7 @@ export class InspectorPanel
     // Connect new signal handler.
     if (this._source) {
             //   this._source.standby = false;
-      this._source.inspected.connect(this.onInspectorUpdate, this);
+      this._source.inspected.connect(this.onMyInspectorUpdate, this);
       this._source.disposed.connect(this.onSourceDisposed, this);
     }
   }
@@ -111,15 +111,15 @@ export class InspectorPanel
   }
 
   /**
-   * Handle inspector update signals.
+   * Handle myinspector update signals.
    */
-  protected onInspectorUpdate(
+  protected onMyInspectorUpdate(
     sender: any,
-    args: IInspector.IInspectorUpdate
+    args: IMyInspector.IMyInspectorUpdate
   ): void {
     const { content } = args;
 
-    // Update the content of the inspector widget.
+    // Update the content of the myinspector widget.
     if (!content || content === this._content) {
       return;
     }
@@ -152,10 +152,10 @@ export class InspectorPanel
   protected translator: ITranslator;
   private _trans: TranslationBundle;
   private _content: Widget;
-  private _source: IInspector.IInspectable | null = null;
+  private _source: IMyInspector.IInspectable | null = null;
 }
 
-export namespace InspectorPanel {
+export namespace MyInspectorPanel {
   export interface IOptions {
     initialContent?: Widget | string | undefined;
 

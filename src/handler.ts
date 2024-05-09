@@ -9,12 +9,12 @@ import { JSONExt, ReadonlyJSONObject } from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
 import { Debouncer } from '@lumino/polling';
 import { ISignal, Signal } from '@lumino/signaling';
-import { IInspector } from './tokens';
+import { IMyInspector } from './tokens';
 
 /**
  * An object that handles code inspection.
  */
-export class InspectionHandler implements IDisposable, IInspector.IInspectable {
+export class InspectionHandler implements IDisposable, IMyInspector.IInspectable {
   /**
    * Construct a new inspection handler for a widget.
    */
@@ -25,7 +25,7 @@ export class InspectionHandler implements IDisposable, IInspector.IInspectable {
   }
 
   /**
-   * A signal emitted when the inspector should clear all items.
+   * A signal emitted when the myinspector should clear all items.
    */
   get cleared(): ISignal<InspectionHandler, void> {
     return this._cleared;
@@ -39,9 +39,9 @@ export class InspectionHandler implements IDisposable, IInspector.IInspectable {
   }
 
   /**
-   * A signal emitted when an inspector value is generated.
+   * A signal emitted when an myinspector value is generated.
    */
-  get inspected(): ISignal<InspectionHandler, IInspector.IInspectorUpdate> {
+  get inspected(): ISignal<InspectionHandler, IMyInspector.IMyInspectorUpdate> {
     return this._inspected;
   }
 
@@ -60,7 +60,7 @@ export class InspectionHandler implements IDisposable, IInspector.IInspectable {
 
     const editor = (this._editor = newValue);
     if (editor) {
-      // Clear the inspector in preparation for a new editor.
+      // Clear the myinspector in preparation for a new editor.
       this._cleared.emit(void 0);
       // Call onEditorChange to cover the case where the user changes
       // the active cell
@@ -75,7 +75,7 @@ export class InspectionHandler implements IDisposable, IInspector.IInspectable {
    *
    * #### Notes
    * The use case for this attribute is to limit the API traffic when no
-   * inspector is visible.
+   * myinspector is visible.
    */
   get standby(): boolean {
     return this._standby;
@@ -111,7 +111,7 @@ export class InspectionHandler implements IDisposable, IInspector.IInspectable {
    * Handle a text changed signal from an editor.
    *
    * #### Notes
-   * Update the hints inspector based on a text change.
+   * Update the hints myinspector based on a text change.
    */
   onEditorChange(customText?: string): void {
     // If the handler is in standby mode, bail.
@@ -127,7 +127,7 @@ export class InspectionHandler implements IDisposable, IInspector.IInspectable {
     const text = customText ? customText : editor.model.sharedModel.getSource();
     const position = editor.getCursorPosition();
     const offset = Text.jsIndexToCharIndex(editor.getOffsetAt(position), text);
-    const update: IInspector.IInspectorUpdate = { content: null };
+    const update: IMyInspector.IMyInspectorUpdate = { content: null };
 
     const pending = ++this._pending;
 
@@ -185,7 +185,7 @@ export class InspectionHandler implements IDisposable, IInspector.IInspectable {
   >;
   private _disposed = new Signal<this, void>(this);
   private _editor: CodeEditor.IEditor | null = null;
-  private _inspected = new Signal<this, IInspector.IInspectorUpdate>(this);
+  private _inspected = new Signal<this, IMyInspector.IMyInspectorUpdate>(this);
   private _isDisposed = false;
   private _pending = 0;
   private _rendermime: IRenderMimeRegistry;

@@ -6,34 +6,34 @@ import { ISignal } from '@lumino/signaling';
 import { Widget } from '@lumino/widgets';
 
 /**
- * The inspector panel token.
+ * The myinspector panel token.
  */
-export const IInspector = new Token<IInspector>(
-  '@jupyterlab/inspector:IInspector',
+export const IMyInspector = new Token<IMyInspector>(
+  '@jupyterlab/inspector:IMyInspector',
   `A service for adding contextual help to widgets (visible using "Show Contextual Help" from the Help menu).
   Use this to hook into the contextual help system in your extension.`
 );
 
 /**
- * An interface for an inspector.
+ * An interface for an myinspector.
  */
-export interface IInspector {
+export interface IMyInspector {
   /**
-   * The source of events the inspector listens for.
+   * The source of events the myinspector listens for.
    */
-  source: IInspector.IInspectable | null;
+  source: IMyInspector.IInspectable | null;
 }
 
 /**
- * A namespace for inspector interfaces.
+ * A namespace for myinspector interfaces.
  */
-export namespace IInspector {
+export namespace IMyInspector {
   /**
    * The definition of an inspectable source.
    */
   export interface IInspectable {
     /**
-     * A signal emitted when the inspector should clear all items.
+     * A signal emitted when the myinspector should clear all items.
      */
     cleared: ISignal<any, void>;
 
@@ -43,9 +43,9 @@ export namespace IInspector {
     disposed: ISignal<any, void>;
 
     /**
-     * A signal emitted when an inspector value is generated.
+     * A signal emitted when an myinspector value is generated.
      */
-    inspected: ISignal<any, IInspectorUpdate>;
+    inspected: ISignal<any, IMyInspectorUpdate>;
 
     /**
      * Test whether the inspectable has been disposed.
@@ -57,24 +57,24 @@ export namespace IInspector {
      *
      * #### Notes
      * The use case for this attribute is to limit the API traffic when no
-     * inspector is visible. It can be modified by the consumer of the source.
+     * myinspector is visible. It can be modified by the consumer of the source.
      */
     standby: boolean;
     /**
      * Handle a text changed signal from an editor.
      *
      * #### Notes
-     * Update the hints inspector based on a text change.
+     * Update the hints myinspector based on a text change.
      */
     onEditorChange(customText?: string): void;
   }
 
   /**
-   * An update value for code inspectors.
+   * An update value for code myinspectors.
    */
-  export interface IInspectorUpdate {
+  export interface IMyInspectorUpdate {
     /**
-     * The content being sent to the inspector for display.
+     * The content being sent to the myinspector for display.
      */
     content: Widget | null;
   }

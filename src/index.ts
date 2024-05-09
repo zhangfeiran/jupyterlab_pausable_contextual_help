@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 // export * from './handler';
-// export * from './inspector';
+// export * from './myinspector';
 // export * from './kernelconnector';
 // export * from './tokens';
 
@@ -25,14 +25,14 @@ import {
 } from '@jupyterlab/apputils';
 import { IConsoleTracker } from '@jupyterlab/console';
 //   import {
-//     IInspector,
+//     IMyInspector,
 //     InspectionHandler,
-//     InspectorPanel,
+//     MyInspectorPanel,
 //     KernelConnector
 //   } from '@jupyterlab/inspector';
-import { IInspector } from './tokens';
+import { IMyInspector } from './tokens';
 import { InspectionHandler } from './handler';
-import { InspectorPanel } from './inspector';
+import { MyInspectorPanel } from './myinspector';
 import { KernelConnector } from './kernelconnector';
 
 
@@ -43,7 +43,7 @@ import { inspectorIcon } from '@jupyterlab/ui-components';
 import { Widget } from '@lumino/widgets';
 
 /**
- * The command IDs used by the inspector plugin.
+ * The command IDs used by the myinspector plugin.
  */
 namespace CommandIDs {
   export const open = 'myinspector:open';
@@ -56,12 +56,12 @@ namespace CommandIDs {
 /**
  * A service providing code introspection.
  */
-const inspector: JupyterFrontEndPlugin<IInspector> = {
-  id: 'jupyterlab_pausable_contextual_help:inspector',
+const myinspector: JupyterFrontEndPlugin<IMyInspector> = {
+  id: 'jupyterlab_pausable_contextual_help:myinspector',
   description: 'Provides the pausable code introspection widget.',
   requires: [ITranslator],
   optional: [ICommandPalette, ILauncher, ILayoutRestorer],
-  provides: IInspector,
+  provides: IMyInspector,
   autoStart: true,
   activate: (
     app: JupyterFrontEnd,
@@ -69,136 +69,136 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
     palette: ICommandPalette | null,
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
-  ): IInspector => {
+  ): IMyInspector => {
     const trans = translator.load('jupyterlab');
     const { commands, shell } = app;
     const caption = trans.__(
             'Manually updating code documentation from the active kernel'
     );
     const openedLabel = trans.__('My Contextual Help');
-    const namespace = 'inspector';
-    const datasetKey = 'jpInspector';
-    const tracker = new WidgetTracker<MainAreaWidget<InspectorPanel>>({
+    const namespace = 'myinspector';
+    const datasetKey = 'jpMyInspector';
+    const tracker = new WidgetTracker<MainAreaWidget<MyInspectorPanel>>({
       namespace
     });
 
-    function isInspectorOpen() {
-      return inspector && !inspector.isDisposed;
+    function isMyInspectorOpen() {
+      return myinspector && !myinspector.isDisposed;
     }
 
     function isStandby() {
-      // return inspector && inspector.content && inspector.content.source && inspector.content.source.standby;
-      if (inspector && inspector.content && inspector.content.source) {
-        return inspector.content.source.standby;
+      // return myinspector && myinspector.content && myinspector.content.source && myinspector.content.source.standby;
+      if (myinspector && myinspector.content && myinspector.content.source) {
+        return myinspector.content.source.standby;
       }
       return false;
     }
 
-    let source: IInspector.IInspectable | null = null;
-    let inspector: MainAreaWidget<InspectorPanel>;
-    function openInspector(args: string): MainAreaWidget<InspectorPanel> {
-      if (!isInspectorOpen()) {
-        inspector = new MainAreaWidget({
-          content: new InspectorPanel({ translator })
+    let source: IMyInspector.IInspectable | null = null;
+    let myinspector: MainAreaWidget<MyInspectorPanel>;
+    function openMyInspector(args: string): MainAreaWidget<MyInspectorPanel> {
+      if (!isMyInspectorOpen()) {
+        myinspector = new MainAreaWidget({
+          content: new MyInspectorPanel({ translator })
         });
-        inspector.id = 'jp-inspector';
-        inspector.title.label = openedLabel;
-        inspector.title.icon = inspectorIcon;
-        void tracker.add(inspector);
+        myinspector.id = 'jp-myinspector';
+        myinspector.title.label = openedLabel;
+        myinspector.title.icon = inspectorIcon;
+        void tracker.add(myinspector);
         source = source && !source.isDisposed ? source : null;
-        inspector.content.source = source;
-        inspector.content.source?.onEditorChange(args);
+        myinspector.content.source = source;
+        myinspector.content.source?.onEditorChange(args);
       }
-      if (!inspector.isAttached) {
-        shell.add(inspector, 'main', {
+      if (!myinspector.isAttached) {
+        shell.add(myinspector, 'main', {
           activate: false,
           mode: 'split-right',
-          type: 'Inspector'
+          type: 'MyInspector'
         });
       }
-      shell.activateById(inspector.id);
+      shell.activateById(myinspector.id);
       document.body.dataset[datasetKey] = 'open';
-      return inspector;
+      return myinspector;
     }
-    function closeInspector(): void {
-      inspector.dispose();
+    function closeMyInspector(): void {
+      myinspector.dispose();
       delete document.body.dataset[datasetKey];
     }
 
-    // Add inspector:open command to registry.
+    // Add myinspector:open command to registry.
     const showLabel = trans.__('Open My Contextual Help');
     commands.addCommand(CommandIDs.open, {
       caption,
       isEnabled: () =>
-        !inspector ||
-        inspector.isDisposed ||
-        !inspector.isAttached ||
-        !inspector.isVisible,
+        !myinspector ||
+        myinspector.isDisposed ||
+        !myinspector.isAttached ||
+        !myinspector.isVisible,
       label: showLabel,
       icon: args => (args.isLauncher ? inspectorIcon : undefined),
       execute: args => {
         const text = args && (args.text as string);
         const refresh = args && (args.refresh as boolean);
-        // if inspector is open, see if we need a refresh
-        if (isInspectorOpen() && refresh)
-          inspector.content.source?.onEditorChange(text);
-        else openInspector(text);
+        // if myinspector is open, see if we need a refresh
+        if (isMyInspectorOpen() && refresh)
+          myinspector.content.source?.onEditorChange(text);
+        else openMyInspector(text);
       }
     });
 
-    // Add inspector:close command to registry.
+    // Add myinspector:close command to registry.
     const closeLabel = trans.__('Hide My Contextual Help');
     commands.addCommand(CommandIDs.close, {
       caption,
-      isEnabled: () => isInspectorOpen(),
+      isEnabled: () => isMyInspectorOpen(),
       label: closeLabel,
       icon: args => (args.isLauncher ? inspectorIcon : undefined),
-      execute: () => closeInspector()
+      execute: () => closeMyInspector()
     });
 
-    // Add inspector:toggle command to registry.
+    // Add myinspector:toggle command to registry.
     const toggleLabel = trans.__('Show My Contextual Help');
     commands.addCommand(CommandIDs.toggle, {
       caption,
       label: toggleLabel,
-      isToggled: () => isInspectorOpen(),
+      isToggled: () => isMyInspectorOpen(),
       execute: args => {
-        if (isInspectorOpen()) {
-          closeInspector();
+        if (isMyInspectorOpen()) {
+          closeMyInspector();
         } else {
           const text = args && (args.text as string);
-          openInspector(text);
+          openMyInspector(text);
         }
       }
     });
 
-    // Add inspector:trigger command to registry.
+    // Add myinspector:trigger command to registry.
     const triggerLabel = trans.__('Trigger My Contextual Help');
     commands.addCommand(CommandIDs.trigger, {
       caption,
       isEnabled: () => isStandby(),
       label: triggerLabel,
       execute: () => {
-        if (inspector && inspector.content && inspector.content.source && isStandby()) {
-          inspector.content.source.standby = false;
-          inspector.content.source?.onEditorChange();
-          inspector.content.source.standby = true;
+        if (myinspector && myinspector.content && myinspector.content.source && isStandby()) {
+          myinspector.content.source.standby = false;
+          myinspector.content.source?.onEditorChange();
+          myinspector.content.source.standby = true;
         }
       }
     });
 
-    // Add inspector:toggleStandby command to registry.
+    // Add myinspector:toggleStandby command to registry.
     const toggleStandbyLabel = trans.__('Auto Update My Contextual Help');
     commands.addCommand(CommandIDs.toggleStandby, {
       caption,
       isToggled: () => !isStandby(),
       label: toggleStandbyLabel,
       execute: () => {
-        if (inspector && inspector.content && inspector.content.source) {
+        if (myinspector && myinspector.content && myinspector.content.source) {
           if (isStandby()) {
-            inspector.content.source.standby = false;
+            myinspector.content.source.standby = false;
           } else {
-            inspector.content.source.standby = true;
+            myinspector.content.source.standby = true;
           }
         }
       }
@@ -218,18 +218,18 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
     if (restorer) {
       void restorer.restore(tracker, {
         command: CommandIDs.toggle,
-        name: () => 'inspector'
+        name: () => 'myinspector'
       });
     }
 
-    // Create a proxy to pass the `source` to the current inspector.
-    const proxy = Object.defineProperty({} as IInspector, 'source', {
-      get: (): IInspector.IInspectable | null =>
-        !inspector || inspector.isDisposed ? null : inspector.content.source,
-      set: (src: IInspector.IInspectable | null) => {
+    // Create a proxy to pass the `source` to the current myinspector.
+    const proxy = Object.defineProperty({} as IMyInspector, 'source', {
+      get: (): IMyInspector.IInspectable | null =>
+        !myinspector || myinspector.isDisposed ? null : myinspector.content.source,
+      set: (src: IMyInspector.IInspectable | null) => {
         source = src && !src.isDisposed ? src : null;
-        if (inspector && !inspector.isDisposed) {
-          inspector.content.source = source;
+        if (myinspector && !myinspector.isDisposed) {
+          myinspector.content.source = source;
         }
       }
     });
@@ -245,11 +245,11 @@ const consoles: JupyterFrontEndPlugin<void> = {
   // FIXME This should be in @jupyterlab/console-extension
   id: 'jupyterlab_pausable_contextual_help:consoles',
   description: 'Adds my code introspection support to consoles.',
-  requires: [IInspector, IConsoleTracker, ILabShell],
+  requires: [IMyInspector, IConsoleTracker, ILabShell],
   autoStart: true,
   activate: (
     app: JupyterFrontEnd,
-    manager: IInspector,
+    manager: IMyInspector,
     consoles: IConsoleTracker,
     labShell: ILabShell,
     translator: ITranslator
@@ -283,7 +283,7 @@ const consoles: JupyterFrontEndPlugin<void> = {
       });
     });
 
-    // Keep track of console instances and set inspector source.
+    // Keep track of console instances and set myinspector source.
     const setSource = (widget: Widget | null): void => {
       if (widget && consoles.has(widget) && handlers[widget.id]) {
         manager.source = handlers[widget.id];
@@ -312,11 +312,11 @@ const notebooks: JupyterFrontEndPlugin<void> = {
   // FIXME This should be in @jupyterlab/notebook-extension
   id: 'jupyterlab_pausable_contextual_help:notebooks',
   description: 'Adds code introspection to notebooks.',
-  requires: [IInspector, INotebookTracker, ILabShell],
+  requires: [IMyInspector, INotebookTracker, ILabShell],
   autoStart: true,
   activate: (
     app: JupyterFrontEnd,
-    manager: IInspector,
+    manager: IMyInspector,
     notebooks: INotebookTracker,
     labShell: ILabShell
   ): void => {
@@ -353,7 +353,7 @@ const notebooks: JupyterFrontEndPlugin<void> = {
       });
     });
 
-    // Keep track of notebook instances and set inspector source.
+    // Keep track of notebook instances and set myinspector source.
     const setSource = (widget: Widget | null): void => {
       if (widget && notebooks.has(widget) && handlers[widget.id]) {
         manager.source = handlers[widget.id];
@@ -378,5 +378,5 @@ const notebooks: JupyterFrontEndPlugin<void> = {
 /**
  * Export the plugins as default.
  */
-const plugins: JupyterFrontEndPlugin<any>[] = [inspector, consoles, notebooks];
+const plugins: JupyterFrontEndPlugin<any>[] = [myinspector, consoles, notebooks];
 export default plugins;
