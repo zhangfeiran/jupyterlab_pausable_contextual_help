@@ -29,12 +29,18 @@ import {
   WidgetTracker
 } from '@jupyterlab/apputils';
 import { IConsoleTracker } from '@jupyterlab/console';
-import {
-  IInspector,
-  InspectionHandler,
-  InspectorPanel,
-  KernelConnector
-} from '@jupyterlab/inspector';
+//   import {
+//     IInspector,
+//     InspectionHandler,
+//     InspectorPanel,
+//     KernelConnector
+//   } from '@jupyterlab/inspector';
+import { IInspector } from './tokens';
+import { InspectionHandler } from './handler';
+import { InspectorPanel } from './inspector';
+import { KernelConnector } from './kernelconnector';
+
+
 import { ILauncher } from '@jupyterlab/launcher';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { ITranslator } from '@jupyterlab/translation';
@@ -45,17 +51,19 @@ import { Widget } from '@lumino/widgets';
  * The command IDs used by the inspector plugin.
  */
 namespace CommandIDs {
-  export const open = 'inspector:open';
-  export const close = 'inspector:close';
-  export const toggle = 'inspector:toggle';
+  export const open = 'myinspector:open';
+  export const close = 'myinspector:close';
+  export const toggle = 'myinspector:toggle';
+  export const trigger = 'myinspector:trigger';
+  export const toggleStandby = 'myinspector:toggleStandby';
 }
 
 /**
  * A service providing code introspection.
  */
 const inspector: JupyterFrontEndPlugin<IInspector> = {
-  id: '@jupyterlab/inspector-extension:inspector',
-  description: 'Provides the code introspection widget.',
+  id: 'jupyterlab_pausable_contextual_help:inspector',
+  description: 'Provides the pausable code introspection widget.',
   requires: [ITranslator],
   optional: [ICommandPalette, ILauncher, ILayoutRestorer],
   provides: IInspector,
@@ -81,6 +89,14 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
 
     function isInspectorOpen() {
       return inspector && !inspector.isDisposed;
+    }
+
+    function isStandby() {
+      // return inspector && inspector.content && inspector.content.source && inspector.content.source.standby;
+      if (inspector && inspector.content && inspector.content.source) {
+        return inspector.content.source.standby;
+      }
+      return false;
     }
 
     let source: IInspector.IInspectable | null = null;
@@ -115,7 +131,7 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
     }
 
     // Add inspector:open command to registry.
-    const showLabel = trans.__('Show Contextual Help');
+    const showLabel = trans.__('Show My Contextual Help');
     commands.addCommand(CommandIDs.open, {
       caption,
       isEnabled: () =>
@@ -136,7 +152,7 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
     });
 
     // Add inspector:close command to registry.
-    const closeLabel = trans.__('Hide Contextual Help');
+    const closeLabel = trans.__('Hide My Contextual Help');
     commands.addCommand(CommandIDs.close, {
       caption,
       isEnabled: () => isInspectorOpen(),
@@ -146,7 +162,7 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
     });
 
     // Add inspector:toggle command to registry.
-    const toggleLabel = trans.__('Show Contextual Help');
+    const toggleLabel = trans.__('Show My Contextual Help');
     commands.addCommand(CommandIDs.toggle, {
       caption,
       label: toggleLabel,
@@ -157,6 +173,38 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
         } else {
           const text = args && (args.text as string);
           openInspector(text);
+        }
+      }
+    });
+
+    // Add inspector:trigger command to registry.
+    const triggerLabel = trans.__('Trigger My Contextual Help');
+    commands.addCommand(CommandIDs.trigger, {
+      caption,
+      isEnabled: () => isStandby(),
+      label: triggerLabel,
+      execute: () => {
+        if (inspector && inspector.content && inspector.content.source && isStandby()) {
+          inspector.content.source.standby = false;
+          inspector.content.source?.onEditorChange();
+          inspector.content.source.standby = true;
+        }
+      }
+    });
+
+    // Add inspector:toggleStandby command to registry.
+    const toggleStandbyLabel = trans.__('Auto Update My Contextual Help');
+    commands.addCommand(CommandIDs.toggleStandby, {
+      caption,
+      isToggled: () => !isStandby(),
+      label: toggleStandbyLabel,
+      execute: () => {
+        if (inspector && inspector.content && inspector.content.source) {
+          if (isStandby()) {
+            inspector.content.source.standby = false;
+          } else {
+            inspector.content.source.standby = true;
+          }
         }
       }
     });
@@ -248,6 +296,17 @@ const consoles: JupyterFrontEndPlugin<void> = {
     };
     labShell.currentChanged.connect((_, args) => setSource(args.newValue));
     void app.restored.then(() => setSource(labShell.currentWidget));
+
+    app.contextMenu.addItem({
+      command: CommandIDs.toggle,
+      selector: '.jp-CodeConsole-promptCell'
+    });
+
+    app.contextMenu.addItem({
+      command: CommandIDs.toggleStandby,
+      selector: '.jp-CodeConsole-promptCell'
+    });
+
   }
 };
 
@@ -256,7 +315,7 @@ const consoles: JupyterFrontEndPlugin<void> = {
  */
 const notebooks: JupyterFrontEndPlugin<void> = {
   // FIXME This should be in @jupyterlab/notebook-extension
-  id: '@jupyterlab/inspector-extension:notebooks',
+  id: 'jupyterlab_pausable_contextual_help:notebooks',
   description: 'Adds code introspection to notebooks.',
   requires: [IInspector, INotebookTracker, ILabShell],
   autoStart: true,
@@ -307,6 +366,17 @@ const notebooks: JupyterFrontEndPlugin<void> = {
     };
     labShell.currentChanged.connect((_, args) => setSource(args.newValue));
     void app.restored.then(() => setSource(labShell.currentWidget));
+
+    app.contextMenu.addItem({
+      command: CommandIDs.toggle,
+      selector: '.jp-Notebook'
+    });
+
+    app.contextMenu.addItem({
+      command: CommandIDs.toggleStandby,
+      selector: '.jp-Notebook'
+    });
+
   }
 };
 

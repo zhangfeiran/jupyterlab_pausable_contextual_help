@@ -54,6 +54,10 @@
     },
     "dependencies": {
         "@jupyterlab/application": "^4.2.0",
+        "@jupyterlab/console": "^4.2.0",
+        "@jupyterlab/inspector": "^4.2.0",
+        "@jupyterlab/launcher": "^4.2.0",
+        "@jupyterlab/notebook": "^4.2.0",
         "@jupyterlab/settingregistry": "^4.0.0"
     },
     "devDependencies": {
