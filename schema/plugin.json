@@ -1,0 +1,8 @@
+{
+  "jupyter.lab.shortcuts": [],
+  "title": "jupyterlab_pausable_contextual_help",
+  "description": "jupyterlab_pausable_contextual_help settings.",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}
