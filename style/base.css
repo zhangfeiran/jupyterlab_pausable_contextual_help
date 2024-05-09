@@ -7,4 +7,42 @@
 | Variables
 |----------------------------------------------------------------------------*/
 
+:root {
+  --jp-private-myinspector-tab-height: 24px;
+  --jp-private-myinspector-tab-width: 60px;
+}
 
+/*-----------------------------------------------------------------------------
+| MyInspector
+|----------------------------------------------------------------------------*/
+
+.jp-MyInspector {
+  outline: none;
+  min-width: 120px;
+  min-height: 120px;
+}
+
+.jp-MyInspector-content {
+  background: var(--jp-layout-color1);
+  border: none;
+  padding: 8px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.jp-MyInspector-content pre {
+  font-size: var(--jp-code-font-size);
+  line-height: var(--jp-code-line-height);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.jp-MyInspector-default-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: xx-large;
+  font-style: italic;
+  color: darkgray;
+}
