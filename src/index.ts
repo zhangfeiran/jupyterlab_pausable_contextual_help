@@ -1,9 +1,5 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
-/**
- * @packageDocumentation
- * @module inspector
- */
 
 // export * from './handler';
 // export * from './inspector';
@@ -12,10 +8,6 @@
 
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
-/**
- * @packageDocumentation
- * @module inspector-extension
- */
 
 import {
   ILabShell,
@@ -120,8 +112,8 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
       if (!inspector.isAttached) {
         shell.add(inspector, 'main', {
           activate: false,
-          // mode: 'split-right',
-          // type: 'Inspector'
+          mode: 'split-right',
+          type: 'Inspector'
         });
       }
       shell.activateById(inspector.id);

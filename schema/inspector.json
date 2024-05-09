@@ -26,7 +26,7 @@
     {
       "command": "myinspector:toggle",
       "keys": [
-        "Accel I"
+        "Ctrl Shift I"
       ],
       "selector": "body"
     },
@@ -35,7 +35,7 @@
       "keys": [
         "F1"
       ],
-      "selector": "body[data-jp-inspector='open']"
+      "selector": "body"
     }
   ],
   "properties": {},
