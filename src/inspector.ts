@@ -49,7 +49,7 @@ export class InspectorPanel
     } else {
       this._content = InspectorPanel._generateContentWidget(
         '<p>' +
-          this._trans.__('Click on a function to see documentation.') +
+                this._trans.__('Press F1 on a function to see documentation.') +
           '</p>'
       );
     }
@@ -93,7 +93,7 @@ export class InspectorPanel
 
     // Connect new signal handler.
     if (this._source) {
-      this._source.standby = false;
+            //   this._source.standby = false;
       this._source.inspected.connect(this.onInspectorUpdate, this);
       this._source.disposed.connect(this.onSourceDisposed, this);
     }

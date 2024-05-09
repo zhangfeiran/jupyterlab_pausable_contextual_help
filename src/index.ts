@@ -78,9 +78,9 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
     const trans = translator.load('jupyterlab');
     const { commands, shell } = app;
     const caption = trans.__(
-      'Live updating code documentation from the active kernel'
+            'Manually updating code documentation from the active kernel'
     );
-    const openedLabel = trans.__('Contextual Help');
+    const openedLabel = trans.__('My Contextual Help');
     const namespace = 'inspector';
     const datasetKey = 'jpInspector';
     const tracker = new WidgetTracker<MainAreaWidget<InspectorPanel>>({
@@ -131,7 +131,7 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
     }
 
     // Add inspector:open command to registry.
-    const showLabel = trans.__('Show My Contextual Help');
+    const showLabel = trans.__('Open My Contextual Help');
     commands.addCommand(CommandIDs.open, {
       caption,
       isEnabled: () =>
@@ -248,8 +248,8 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
  */
 const consoles: JupyterFrontEndPlugin<void> = {
   // FIXME This should be in @jupyterlab/console-extension
-  id: '@jupyterlab/inspector-extension:consoles',
-  description: 'Adds code introspection support to consoles.',
+  id: 'jupyterlab_pausable_contextual_help:consoles',
+  description: 'Adds my code introspection support to consoles.',
   requires: [IInspector, IConsoleTracker, ILabShell],
   autoStart: true,
   activate: (
