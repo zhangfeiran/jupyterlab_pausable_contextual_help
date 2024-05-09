@@ -23,6 +23,9 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+
+// import { ISettingRegistry } from '@jupyterlab/settingregistry';
+
 import {
   ICommandPalette,
   MainAreaWidget,
@@ -117,8 +120,8 @@ const inspector: JupyterFrontEndPlugin<IInspector> = {
       if (!inspector.isAttached) {
         shell.add(inspector, 'main', {
           activate: false,
-          mode: 'split-right',
-          type: 'Inspector'
+          // mode: 'split-right',
+          // type: 'Inspector'
         });
       }
       shell.activateById(inspector.id);
